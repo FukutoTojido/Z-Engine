@@ -1,10 +1,14 @@
 {
   "name": "@fukutotojido/z-engine",
   "module": "src/ZEngine.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FukutoTojido/Z-Engine.git"
+  },
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "dev": "bun run --watch ./index.ts"
+    "test": "bun run --watch ./test/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
