@@ -1,5 +1,3 @@
-import WebSocket from "ws";
-
 // biome-ignore lint/suspicious/noExplicitAny: It is complicated
 export type Data = Record<string, any>;
 
@@ -13,14 +11,14 @@ export default class ZEngine {
 
 	constructor(url: string) {
 		const ws = new WebSocket(url);
-		ws.on("open", () => console.log("WebSocket connected!"));
-		ws.on("close", () => console.log("WebSocket disconnected!"));
-		ws.on("error", (error) => {
+		ws.addEventListener("open", () => console.log("WebSocket connected!"));
+		ws.addEventListener("close", () => console.log("WebSocket disconnected!"));
+		ws.addEventListener("error", (error) => {
 			ws.close();
 			console.error(error);
 		});
-		ws.on("message", (message) => {
-			const data: Data = JSON.parse(message.toString());
+		ws.addEventListener("message", (event) => {
+			const data: Data = JSON.parse(event.data);
 			this.update(data);
 		});
 	}
@@ -64,5 +62,3 @@ export default class ZEngine {
 		return curr;
 	}
 }
-
-module.exports = ZEngine;
