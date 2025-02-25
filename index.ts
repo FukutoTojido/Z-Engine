@@ -1,2 +1,5 @@
-import ZEngine from "./src/ZEngine";
-export default ZEngine;
+import ZEngine, { type Data } from "./src/ZEngine";
+export {
+    ZEngine as default,
+    type Data
+};
