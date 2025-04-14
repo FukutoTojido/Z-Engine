@@ -1,6 +1,6 @@
 {
   "name": "@fukutotojido/z-engine",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/FukutoTojido/Z-Engine.git"
@@ -18,6 +18,6 @@
   },
   "type": "module",
   "dependencies": {
-    "jq-web": "^0.6.2"
+    "jqts": "^0.0.8"
   }
 }
