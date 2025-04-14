@@ -59,8 +59,8 @@ export default class ZEngine {
 		}
 
 		for (const { pattern, callbacks } of this.jq_entries.values()) {
-			const oldValue = pattern.evaluate(this.cache);
-			const newValue = pattern.evaluate(newData);
+			const oldValue = pattern.evaluate(this.cache)[0];
+			const newValue = pattern.evaluate(newData)[0];
 
 			if (!callbacks || oldValue === newValue) continue;
 			for (const callback of callbacks)
