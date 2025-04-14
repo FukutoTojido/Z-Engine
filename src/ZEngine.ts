@@ -1,3 +1,5 @@
+import jq, { type JQ } from 'jqts';
+
 // biome-ignore lint/suspicious/noExplicitAny: It is complicated
 export type Data = Record<string, any>;
 
@@ -5,9 +7,16 @@ export type Data = Record<string, any>;
 type Callback = (oldValue: any, newValue: any, newData: Data) => void;
 type Entry = Map<string, Set<Callback>>;
 
+type jqItem = {
+	pattern: JQ,
+	callbacks: Set<Callback>
+}
+type jqEntry = Map<string, jqItem>
+
 export default class ZEngine {
 	cache: Data = {};
 	entries: Entry = new Map();
+	jq_entries: jqEntry = new Map();
 
 	constructor(url: string) {
 		const ws = new WebSocket(url);
@@ -28,6 +37,7 @@ export default class ZEngine {
 			this.entries.set(key, new Set());
 		}
 		this.entries.get(key)?.add(callback);
+		return callback;
 	}
 
 	unregister(key: string, callback: Callback) {
@@ -48,6 +58,15 @@ export default class ZEngine {
 				if (oldValue !== newValue) callback(oldValue, newValue, newData);
 		}
 
+		for (const { pattern, callbacks } of this.jq_entries.values()) {
+			const oldValue = pattern.evaluate(this.cache);
+			const newValue = pattern.evaluate(newData);
+
+			if (!callbacks || oldValue === newValue) continue;
+			for (const callback of callbacks)
+				callback(oldValue, newValue, newData);
+		}
+
 		this.cache = newData;
 	}
 
@@ -60,5 +79,26 @@ export default class ZEngine {
 		}
 
 		return curr;
+	}
+
+	register_jq(query: string, callback: Callback) {
+		const pattern = jq.compile(query);
+		
+		if (!this.jq_entries.get(query)) {
+			this.jq_entries.set(query, {
+				pattern,
+				callbacks: new Set()
+			})
+		};
+
+		this.jq_entries.get(query)?.callbacks.add(callback);
+		return callback;
+	}
+
+	unregister_jq(query: string, callback: Callback) {
+		this.jq_entries.get(query)?.callbacks.delete(callback);
+		if (this.jq_entries.get(query)?.callbacks.size === 0) {
+			this.jq_entries.delete(query);
+		}
 	}
 }

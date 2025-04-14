@@ -1,6 +1,6 @@
 {
   "name": "@fukutotojido/z-engine",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "repository": {
     "type": "git",
     "url": "https://github.com/FukutoTojido/Z-Engine.git"
@@ -16,5 +16,8 @@
   "scripts": {
     "test": "bun run --watch ./test/index.ts"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "jqts": "^0.0.8"
+  }
 }
