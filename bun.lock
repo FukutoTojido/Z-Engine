@@ -4,7 +4,7 @@
     "": {
       "name": "z-engine",
       "dependencies": {
-        "jqts": "^0.0.8",
+        "jq-web": "^0.6.2",
       },
       "devDependencies": {
         "@types/bun": "latest",
@@ -23,7 +23,7 @@
 
     "bun-types": ["bun-types@1.2.3", "", { "dependencies": { "@types/node": "*", "@types/ws": "~8.5.10" } }, "sha512-P7AeyTseLKAvgaZqQrvp3RqFM3yN9PlcLuSTe7SoJOfZkER73mLdT2vEQi8U64S1YvM/ldcNiQjn0Sn7H9lGgg=="],
 
-    "jqts": ["jqts@0.0.8", "", {}, "sha512-f4XuU3OWF+1e0o9ich5tzNr+EkDwinqHy6rtz9YfEYC1w6JHuSFfrjrseg//auXDExy2nhwrz6e2v6IPlxSodQ=="],
+    "jq-web": ["jq-web@0.6.2", "", {}, "sha512-+7XvjBYwTx4vP5PYkf6Q6orubO/v+UgMU6By1GritrmShr9QpT3UKa4ANzXWQfhdqtBnQYXsm7ZNbdIHT6tYpQ=="],
 
     "typescript": ["typescript@5.7.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw=="],
 

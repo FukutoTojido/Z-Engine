@@ -1,4 +1,5 @@
-import jq, { type JQ } from 'jqts';
+// @ts-ignore
+import jq from "jq-web";
 
 // biome-ignore lint/suspicious/noExplicitAny: It is complicated
 export type Data = Record<string, any>;
@@ -7,16 +8,13 @@ export type Data = Record<string, any>;
 type Callback = (oldValue: any, newValue: any, newData: Data) => void;
 type Entry = Map<string, Set<Callback>>;
 
-type jqItem = {
-	pattern: JQ,
-	callbacks: Set<Callback>
-}
-type jqEntry = Map<string, jqItem>
-
 export default class ZEngine {
 	cache: Data = {};
 	entries: Entry = new Map();
-	jq_entries: jqEntry = new Map();
+	jq_entries: Entry = new Map();
+
+	// biome-ignore lint/suspicious/noExplicitAny: jq-web doesn't provide types
+	jq: any;
 
 	constructor(url: string) {
 		const ws = new WebSocket(url);
@@ -30,6 +28,10 @@ export default class ZEngine {
 			const data: Data = JSON.parse(event.data);
 			this.update(data);
 		});
+	}
+
+	async init_jq() {
+		this.jq = await jq;
 	}
 
 	register(key: string, callback: Callback) {
@@ -58,14 +60,16 @@ export default class ZEngine {
 				if (oldValue !== newValue) callback(oldValue, newValue, newData);
 		}
 
-		for (const { pattern, callbacks } of this.jq_entries.values()) {
-			const oldValue = pattern.evaluate(this.cache)[0];
-			const newValue = pattern.evaluate(newData)[0];
-
-			if (!callbacks || oldValue === newValue) continue;
-			for (const callback of callbacks)
-				callback(oldValue, newValue, newData);
+		if (this.jq) {
+			for (const [query, callbacks] of this.jq_entries.entries()) {
+				const oldValue = this.jq.json(this.cache, query);
+				const newValue = this.jq.json(newData, query);
+	
+				if (!callbacks || oldValue === newValue) continue;
+				for (const callback of callbacks) callback(oldValue, newValue, newData);
+			}
 		}
+
 
 		this.cache = newData;
 	}
@@ -82,22 +86,19 @@ export default class ZEngine {
 	}
 
 	register_jq(query: string, callback: Callback) {
-		const pattern = jq.compile(query);
-		
-		if (!this.jq_entries.get(query)) {
-			this.jq_entries.set(query, {
-				pattern,
-				callbacks: new Set()
-			})
-		};
+		if (!this.jq) throw new Error("jq-web hasn't init");
 
-		this.jq_entries.get(query)?.callbacks.add(callback);
+		if (!this.jq_entries.get(query)) {
+			this.jq_entries.set(query, new Set());
+		}
+
+		this.jq_entries.get(query)?.add(callback);
 		return callback;
 	}
 
 	unregister_jq(query: string, callback: Callback) {
-		this.jq_entries.get(query)?.callbacks.delete(callback);
-		if (this.jq_entries.get(query)?.callbacks.size === 0) {
+		this.jq_entries.get(query)?.delete(callback);
+		if (this.jq_entries.get(query)?.size === 0) {
 			this.jq_entries.delete(query);
 		}
 	}
