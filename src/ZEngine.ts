@@ -13,7 +13,7 @@ type jqItem = {
 };
 type jqEntry = Map<string, jqItem>;
 
-type FilterOption = { field: string; keys: (FilterOption | string)[] };
+type FilterOption = string | { field: string; keys: FilterOption[] };
 
 export default class ZEngine {
 	cache: Data = {};
@@ -25,8 +25,8 @@ export default class ZEngine {
 		ws.addEventListener("open", () => {
 			console.log("WebSocket connected!");
 			console.log(`Applied filters: ${filterOptions}`);
-			
-			ws.send(`applyFilters:${JSON.stringify(filterOptions)}`)
+
+			ws.send(`applyFilters:${JSON.stringify(filterOptions)}`);
 		});
 		ws.addEventListener("close", () => console.log("WebSocket disconnected!"));
 		ws.addEventListener("error", (error) => {

@@ -1,6 +1,6 @@
 {
   "name": "@fukutotojido/z-engine",
-  "version": "1.1.11",
+  "version": "1.1.13",
   "repository": {
     "type": "git",
     "url": "https://github.com/FukutoTojido/Z-Engine.git"
@@ -9,9 +9,6 @@
   "module": "./out/index.js",
   "devDependencies": {
     "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
   },
   "exports": "./out/index.js",
   "scripts": {
