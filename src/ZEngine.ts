@@ -13,7 +13,7 @@ type jqItem = {
 };
 type jqEntry = Map<string, jqItem>;
 
-type FilterOption = string | { field: string; keys: FilterOption[] };
+type FilterOption = string | { field: string; keys?: FilterOption[] };
 
 export default class ZEngine {
 	cache: Data = {};
