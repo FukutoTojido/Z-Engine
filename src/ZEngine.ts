@@ -1,4 +1,4 @@
-import jq, { type JQ } from 'jqts';
+const JQ = require("jqts").default;
 
 // biome-ignore lint/suspicious/noExplicitAny: It is complicated
 export type Data = Record<string, any>;
@@ -8,19 +8,26 @@ type Callback = (oldValue: any, newValue: any, newData: Data) => void;
 type Entry = Map<string, Set<Callback>>;
 
 type jqItem = {
-	pattern: JQ,
-	callbacks: Set<Callback>
-}
-type jqEntry = Map<string, jqItem>
+	pattern: typeof JQ;
+	callbacks: Set<Callback>;
+};
+type jqEntry = Map<string, jqItem>;
+
+type FilterOption = { field: string; keys: (FilterOption | string)[] };
 
 export default class ZEngine {
 	cache: Data = {};
 	entries: Entry = new Map();
 	jq_entries: jqEntry = new Map();
 
-	constructor(url: string) {
+	constructor(url: string, filterOptions: FilterOption[] = []) {
 		const ws = new WebSocket(url);
-		ws.addEventListener("open", () => console.log("WebSocket connected!"));
+		ws.addEventListener("open", () => {
+			console.log("WebSocket connected!");
+			console.log(`Applied filters: ${filterOptions}`);
+			
+			ws.send(`applyFilters:${filterOptions}`)
+		});
 		ws.addEventListener("close", () => console.log("WebSocket disconnected!"));
 		ws.addEventListener("error", (error) => {
 			ws.close();
@@ -63,8 +70,7 @@ export default class ZEngine {
 			const newValue = pattern.evaluate(newData)[0];
 
 			if (!callbacks || oldValue === newValue) continue;
-			for (const callback of callbacks)
-				callback(oldValue, newValue, newData);
+			for (const callback of callbacks) callback(oldValue, newValue, newData);
 		}
 
 		this.cache = newData;
@@ -82,14 +88,14 @@ export default class ZEngine {
 	}
 
 	register_jq(query: string, callback: Callback) {
-		const pattern = jq.compile(query);
-		
+		const pattern = JQ.compile(query);
+
 		if (!this.jq_entries.get(query)) {
 			this.jq_entries.set(query, {
 				pattern,
-				callbacks: new Set()
-			})
-		};
+				callbacks: new Set(),
+			});
+		}
 
 		this.jq_entries.get(query)?.callbacks.add(callback);
 		return callback;
