@@ -19,8 +19,6 @@
   },
   "type": "module",
   "dependencies": {
-    "bun-plugin-dts": "^0.3.0",
-    "jqts": "^0.0.8",
-    "tsc": "^2.0.4"
+    "jqts": "^0.0.8"
   }
 }
