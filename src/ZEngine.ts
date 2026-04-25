@@ -26,7 +26,7 @@ export default class ZEngine {
 			console.log("WebSocket connected!");
 			console.log(`Applied filters: ${filterOptions}`);
 			
-			ws.send(`applyFilters:${filterOptions}`)
+			ws.send(`applyFilters:${JSON.stringify(filterOptions)}`)
 		});
 		ws.addEventListener("close", () => console.log("WebSocket disconnected!"));
 		ws.addEventListener("error", (error) => {
