@@ -24,7 +24,7 @@ export default class ZEngine {
 		const ws = new WebSocket(url);
 		ws.addEventListener("open", () => {
 			console.log("WebSocket connected!");
-			console.log(`Applied filters: ${filterOptions}`);
+			console.log(`Applied filters: ${JSON.stringify(filterOptions)}`);
 
 			ws.send(`applyFilters:${JSON.stringify(filterOptions)}`);
 		});
