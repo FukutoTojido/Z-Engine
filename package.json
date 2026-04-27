@@ -1,6 +1,6 @@
 {
   "name": "@fukutotojido/z-engine",
-  "version": "1.1.16",
+  "version": "1.1.18",
   "repository": {
     "type": "git",
     "url": "https://github.com/FukutoTojido/Z-Engine.git"
@@ -11,7 +11,7 @@
     "@types/bun": "latest",
     "bun-plugin-dts": "^0.4.0"
   },
-  "exports": "./out/index.js",
+  "exports": "./dist/index.js",
   "scripts": {
     "test": "bun run --watch ./test/index.ts",
     "build": "bun run build"
