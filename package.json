@@ -5,14 +5,16 @@
     "type": "git",
     "url": "https://github.com/FukutoTojido/Z-Engine.git"
   },
-  "main": "./out/index.js",
-  "module": "./out/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "bun-plugin-dts": "^0.4.0"
   },
   "exports": "./out/index.js",
   "scripts": {
-    "test": "bun run --watch ./test/index.ts"
+    "test": "bun run --watch ./test/index.ts",
+    "build": "bun run build"
   },
   "type": "module",
   "dependencies": {
